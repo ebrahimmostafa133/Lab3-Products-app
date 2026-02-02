@@ -1,4 +1,15 @@
-# ProductsApp
+# Products App
+
+## Project Focus & Description
+This project is designed to demonstrate specific Angular concepts, primarily **Pipes**, **Routing**, and **Guards**.
+
+> **Note:** The focus is **NOT** on input validation for Login or Register forms. Any data can be used to log in or register. The goal is to showcase the implementation of:
+
+- **Pipelines**: Custom pipes like `TotalPricePipe` for cart calculations.
+- **Routing**: Navigation flows, `RouterLink`, and parameterized routes (`/products/:id`).
+- **Guards**: Using `AuthGuard` to protect routes based on authentication state.
+
+---
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
 
