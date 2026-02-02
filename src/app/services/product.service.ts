@@ -173,7 +173,7 @@ export class ProductService {
             name: "Kindle Paperwhite",
             description: "6.8\" display, waterproof, adjustable warm light",
             price: 139.99,
-            image: "https://images.unsplash.com/photo-1594980596271-e33bc3263599?auto=format&fit=crop&w=400&q=80",
+            image: "https://images.unsplash.com/photo-1505797149-43b0069ec26b?auto=format&fit=crop&w=400&q=80",
             rating: 5,
             quantity: 30
         },
