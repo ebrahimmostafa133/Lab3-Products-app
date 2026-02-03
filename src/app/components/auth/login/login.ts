@@ -1,23 +1,41 @@
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { FormsModule, NgForm } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrl: './login.css'
 })
-export class Login {
-  email = '';
-  password = '';
-  authService = inject(AuthService);
+export class LoginComponent {
 
-  handleLogin() {
-    if (this.email && this.password) {
-      this.authService.login(this.email);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly toastr = inject(ToastrService);
+
+  showPassword = false;
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  onSubmit(form: NgForm) {
+    if (form.valid) {
+      const { email, password } = form.value;
+      const success = this.authService.login({ email, password });
+
+      if (success) {
+        this.toastr.success('Login successful!', 'Success');
+      } else {
+        this.toastr.error('Invalid email or password.', 'Error');
+      }
+    } else {
+      this.toastr.error('Please fix the errors in the form.', 'Error');
     }
   }
 }

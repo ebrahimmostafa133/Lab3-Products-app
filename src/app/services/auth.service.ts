@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -7,22 +7,29 @@ import { Router } from '@angular/router';
 export class AuthService {
     isAuthenticated = signal<boolean>(this.checkAuth());
 
-    constructor(private router: Router) { }
+    private readonly router = inject(Router);
 
     private checkAuth(): boolean {
         return !!localStorage.getItem('token');
     }
 
-    login(email: string) {
-        localStorage.setItem('token', btoa(email));
-        this.isAuthenticated.set(true);
-        this.router.navigate(['/products']);
+    login(user: any): boolean {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const foundUser = users.find((u: any) => u.email === user.email && u.password === user.password);
+
+        if (foundUser) {
+            localStorage.setItem('token', btoa(user.email));
+            this.isAuthenticated.set(true);
+            this.router.navigate(['/products']);
+            return true;
+        }
+        return false;
     }
 
-    register(email: string) {
-        localStorage.setItem('token', btoa(email));
-        this.isAuthenticated.set(true);
-        this.router.navigate(['/products']);
+    register(user: any) {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        users.push(user);
+        localStorage.setItem('users', JSON.stringify(users));
     }
 
     logout() {

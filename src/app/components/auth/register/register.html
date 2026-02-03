@@ -1,48 +1,109 @@
-<div class="flex justify-center items-center min-h-[80vh]">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md border border-gray-200">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6 font-[Inter]">Register</h2>
-        <form (ngSubmit)="handleRegister()">
-            <div class="mb-4">
-                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        <i class="fa-solid fa-envelope"></i>
-                    </span>
-                    <input type="email" id="email" [(ngModel)]="email" name="email" required
-                        placeholder="Enter your email"
-                        class="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors">
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign up for an account
+        </h2>
+    </div>
+
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form class="space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+            <!-- Name -->
+            <div>
+                <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Full Name</label>
+                <div class="mt-2">
+                    <input id="name" type="text" formControlName="name"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-2">
+                    @if (f['name'].touched && f['name'].invalid) {
+                    <div class="text-red-500 text-xs mt-1">
+                        @if (f['name'].errors?.['required']) {
+                        <div>Name is required.</div>
+                        }
+                        @if (f['name'].errors?.['minlength']) {
+                        <div>Name must be at least 3 characters.</div>
+                        }
+                    </div>
+                    }
                 </div>
             </div>
-            <div class="mb-4">
-                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        <i class="fa-solid fa-lock"></i>
-                    </span>
-                    <input type="password" id="password" [(ngModel)]="password" name="password" required
-                        placeholder="Create a password"
-                        class="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors">
+
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                <div class="mt-2">
+                    <input id="email" type="email" formControlName="email"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-2">
+                    @if (f['email'].touched && f['email'].invalid) {
+                    <div class="text-red-500 text-xs mt-1">
+                        @if (f['email'].errors?.['required']) {
+                        <div>Email is required.</div>
+                        }
+                        @if (f['email'].errors?.['email']) {
+                        <div>Please enter a valid email.</div>
+                        }
+                    </div>
+                    }
                 </div>
             </div>
-            <div class="mb-6">
-                <label for="confirmPassword" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        <i class="fa-solid fa-check-circle"></i>
-                    </span>
-                    <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword"
-                        required placeholder="Confirm your password"
-                        class="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors">
+
+            <!-- Password -->
+            <div>
+                <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                <div class="mt-2 relative">
+                    <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-2 pr-10">
+                    <i class="fa-solid absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+                        [ngClass]="{'fa-eye': !showPassword, 'fa-eye-slash': showPassword}"
+                        (click)="togglePassword()"></i>
+                    @if (f['password'].touched && f['password'].invalid) {
+                    <div class="text-red-500 text-xs mt-1">
+                        @if (f['password'].errors?.['required']) {
+                        <div>Password is required.</div>
+                        }
+                        @if (f['password'].errors?.['minlength']) {
+                        <div>Password must be at least 6 characters.</div>
+                        }
+                    </div>
+                    }
                 </div>
             </div>
-            <button type="submit"
-                class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 flex justify-center items-center gap-2">
-                <i class="fa-solid fa-user-plus"></i> Register
-            </button>
+
+            <!-- Confirm Password -->
+            <div>
+                <label for="confirmPassword" class="block text-sm font-medium leading-6 text-gray-900">Confirm
+                    Password</label>
+                <div class="mt-2 relative">
+                    <input id="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'"
+                        formControlName="confirmPassword"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-2 pr-10">
+                    <i class="fa-solid absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+                        [ngClass]="{'fa-eye': !showConfirmPassword, 'fa-eye-slash': showConfirmPassword}"
+                        (click)="toggleConfirmPassword()"></i>
+                    @if (registerForm.hasError('mismatch') && f['confirmPassword'].touched) {
+                    <div class="text-red-500 text-xs mt-1">
+                        Passwords do not match.
+                    </div>
+                    }
+                    @if (f['confirmPassword'].touched && f['confirmPassword'].invalid &&
+                    !registerForm.hasError('mismatch')) {
+                    <div class="text-red-500 text-xs mt-1">
+                        @if (f['confirmPassword'].errors?.['required']) {
+                        <div>Confirm Password is required.</div>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" [disabled]="registerForm.invalid"
+                    class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-300">Sign
+                    Up</button>
+            </div>
         </form>
-        <p class="mt-4 text-center text-sm text-gray-600">
-            Already have an account? <a routerLink="/login"
-                class="text-green-500 hover:text-green-700 font-semibold">Login</a>
+
+        <p class="mt-10 text-center text-sm text-gray-500">
+            Already have an account?
+            <a routerLink="/login" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign In</a>
         </p>
     </div>
 </div>

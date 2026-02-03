@@ -1,37 +1,64 @@
-<div class="flex justify-center items-center min-h-[80vh]">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md border border-gray-200">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6 font-[Inter]">Login</h2>
-        <form (ngSubmit)="handleLogin()">
-            <div class="mb-4">
-                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        <i class="fa-solid fa-envelope"></i>
-                    </span>
-                    <input type="email" id="email" [(ngModel)]="email" name="email" required
-                        placeholder="Enter your email"
-                        class="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account
+        </h2>
+    </div>
+
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form class="space-y-6" #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                <div class="mt-2">
+                    <input id="email" type="email" name="email" ngModel #email="ngModel" required email
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-2">
+                    @if (email.touched && email.invalid) {
+                    <div class="text-red-500 text-xs mt-1">
+                        @if (email.errors?.['required']) {
+                        <div>Email is required.</div>
+                        }
+                        @if (email.errors?.['email']) {
+                        <div>Please enter a valid email.</div>
+                        }
+                    </div>
+                    }
                 </div>
             </div>
-            <div class="mb-6">
-                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        <i class="fa-solid fa-lock"></i>
-                    </span>
-                    <input type="password" id="password" [(ngModel)]="password" name="password" required
-                        placeholder="Enter your password"
-                        class="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+
+            <!-- Password -->
+            <div>
+                <div class="flex items-center justify-between">
+                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                </div>
+                <div class="mt-2 relative">
+                    <input id="password" [type]="showPassword ? 'text' : 'password'" name="password" ngModel
+                        #password="ngModel" required
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-2 pr-10">
+                    <i class="fa-solid absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+                        [ngClass]="{'fa-eye': !showPassword, 'fa-eye-slash': showPassword}"
+                        (click)="togglePassword()"></i>
+                    @if (password.touched && password.invalid) {
+                    <div class="text-red-500 text-xs mt-1">
+                        @if (password.errors?.['required']) {
+                        <div>Password is required.</div>
+                        }
+                    </div>
+                    }
                 </div>
             </div>
-            <button type="submit"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 flex justify-center items-center gap-2">
-                <i class="fa-solid fa-right-to-bracket"></i> Sign In
-            </button>
+
+            <div>
+                <button type="submit" [disabled]="loginForm.invalid"
+                    class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-300">Sign
+                    in</button>
+            </div>
         </form>
-        <p class="mt-4 text-center text-sm text-gray-600">
-            Don't have an account? <a routerLink="/register"
-                class="text-blue-500 hover:text-blue-700 font-semibold">Register</a>
+
+        <p class="mt-10 text-center text-sm text-gray-500">
+            Not a member?
+            <a routerLink="/register" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign up
+                now</a>
         </p>
     </div>
 </div>
