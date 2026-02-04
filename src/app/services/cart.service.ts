@@ -21,7 +21,13 @@ export class CartService {
 
     addToCart(product: IProducts) {
         const current = this.cartItems();
-        this.saveCart([...current, product]);
+        const existingCount = current.filter(item => item.id === product.id).length;
+
+        if (existingCount < product.quantity) {
+            this.saveCart([...current, product]);
+        } else {
+            alert('Cannot add more items than available in stock');
+        }
     }
 
     removeFromCart(index: number) {

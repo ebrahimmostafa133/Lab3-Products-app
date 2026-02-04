@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IProducts } from '../products/interfaces/products';
 import { CartService } from '../../services/cart.service';
@@ -13,6 +13,12 @@ import { CartService } from '../../services/cart.service';
 export class ProductCard {
   @Input() product!: IProducts;
   cartService = inject(CartService);
+
+  existingInCart = computed(() =>
+    this.cartService.cartItems().filter((item) => item.id === this.product.id).length
+  );
+
+  isMaxReached = computed(() => this.existingInCart() >= this.product.quantity);
 
   addToCart() {
     this.cartService.addToCart(this.product);
