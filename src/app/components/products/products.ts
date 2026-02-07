@@ -1,5 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { IProducts } from './interfaces/products';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Product } from './interfaces/products';
 import { ProductService } from '../../services/product.service';
 import { ProductCard } from '../product-card/product-card';
 
@@ -12,9 +12,23 @@ import { ProductCard } from '../product-card/product-card';
 })
 export class Products implements OnInit {
   productService = inject(ProductService);
-  products: IProducts[] = [];
+  private cdr = inject(ChangeDetectorRef);
+  products: Product[] = [];
 
   ngOnInit() {
-    this.products = this.productService.getProducts();
+    this.getAllProducts();
+  }
+
+  getAllProducts() {
+    this.productService.getAllProducts().subscribe({
+      next: (response) => {
+        console.log(response);
+        this.products = response.products;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
 }

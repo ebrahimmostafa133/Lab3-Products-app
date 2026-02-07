@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
-import { IProducts } from '../products/interfaces/products';
+import { Product } from '../products/interfaces/products';
 
 @Component({
   selector: 'app-product-details',
@@ -16,7 +16,7 @@ export class ProductDetails implements OnInit {
   private productService = inject(ProductService);
   private cartService = inject(CartService);
 
-  product = signal<IProducts | undefined>(undefined);
+  product = signal<Product | undefined>(undefined);
 
   existingInCart = computed(() => {
     const p = this.product();
@@ -24,19 +24,36 @@ export class ProductDetails implements OnInit {
     return this.cartService.cartItems().filter((item) => item.id === p.id).length;
   });
 
+  remainingStock = computed(() => {
+    const p = this.product();
+    if (!p) return 0;
+    return Math.max(0, p.stock - this.existingInCart());
+  });
+
   isMaxReached = computed(() => {
     const p = this.product();
     if (!p) return true;
-    return this.existingInCart() >= p.quantity;
+    return this.existingInCart() >= p.stock;
   });
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const foundProduct = this.productService.getProductById(id);
-    this.product.set(foundProduct);
+    this.getProductById(id);
   }
 
-  addToCart(product: IProducts) {
+  getProductById(id: number) {
+    this.productService.getProductById(id).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.product.set(response);
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  addToCart(product: Product) {
     this.cartService.addToCart(product);
   }
 }

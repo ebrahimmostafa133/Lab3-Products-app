@@ -2,13 +2,13 @@
 <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl mx-auto mt-8">
     <div class="md:flex">
         <div class="md:flex-shrink-0 md:w-1/2">
-            <img [src]="product()?.image" [alt]="product()?.name" class="w-full h-full object-cover max-h-[500px]">
+            <img [src]="product()?.images" [alt]="product()?.title" class="w-full h-full object-cover max-h-[500px]">
         </div>
         <div class="p-8 md:w-1/2 flex flex-col justify-center">
             <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Product Details</div>
             <h2
                 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl white-space-normal">
-                {{ product()?.name }}
+                {{ product()?.title }}
             </h2>
             <div class="flex items-center mt-4 text-yellow-500">
                 @for (star of [1,2,3,4,5]; track star) {
@@ -19,9 +19,9 @@
             <p class="mt-4 text-xl text-gray-500">{{ product()?.description }}</p>
             <div class="mt-8 flex items-center justify-between">
                 <span class="text-4xl font-bold text-gray-900">${{ product()?.price }}</span>
-                <span class="text-sm" [class.text-green-600]="(product()?.quantity || 0) > 0"
-                    [class.text-red-600]="(product()?.quantity || 0) === 0">
-                    {{ (product()?.quantity || 0) > 0 ? (product()?.quantity) + ' items in stock' : 'Out of Stock' }}
+                <span class="text-sm" [class.text-green-600]="remainingStock() > 0"
+                    [class.text-red-600]="remainingStock() === 0">
+                    {{ remainingStock() > 0 ? remainingStock() + ' items in stock' : 'Out of Stock' }}
                 </span>
             </div>
             <div class="mt-8 flex gap-4">

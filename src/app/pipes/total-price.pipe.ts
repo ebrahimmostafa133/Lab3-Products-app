@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { IProducts } from '../components/products/interfaces/products';
+import { Product } from '../components/products/interfaces/products';
 
 @Pipe({
     name: 'totalPrice',
@@ -7,7 +7,7 @@ import { IProducts } from '../components/products/interfaces/products';
 })
 export class TotalPricePipe implements PipeTransform {
 
-    transform(items: IProducts[]): number {
+    transform(items: Product[]): number {
         return items.reduce((sum, item) => sum + item.price, 0);
     }
 

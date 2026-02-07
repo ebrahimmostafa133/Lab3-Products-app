@@ -1,6 +1,6 @@
 import { Component, Input, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IProducts } from '../products/interfaces/products';
+import { Product } from '../products/interfaces/products';
 import { CartService } from '../../services/cart.service';
 
 @Component({
@@ -11,14 +11,14 @@ import { CartService } from '../../services/cart.service';
   styleUrl: './product-card.css',
 })
 export class ProductCard {
-  @Input() product!: IProducts;
+  @Input() product!: Product;
   cartService = inject(CartService);
 
   existingInCart = computed(() =>
     this.cartService.cartItems().filter((item) => item.id === this.product.id).length
   );
 
-  isMaxReached = computed(() => this.existingInCart() >= this.product.quantity);
+  isMaxReached = computed(() => this.existingInCart() >= this.product.stock);
 
   addToCart() {
     this.cartService.addToCart(this.product);
